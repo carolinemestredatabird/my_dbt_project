@@ -1,0 +1,5 @@
+version: 2
+
+models:
+  - name: stg_google_analytics__event_flattened
+    description: "This model provides Google Analytics event-level data."

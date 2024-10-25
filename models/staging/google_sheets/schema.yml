@@ -1,0 +1,5 @@
+version: 2
+
+models:
+  - name: stg_google_sheets__account_manager_region_mapping
+    description: "This model provides a mapping of account managers to states from a Google Sheets source."

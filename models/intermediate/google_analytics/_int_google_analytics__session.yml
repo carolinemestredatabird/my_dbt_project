@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: int_google_analytics__session
+    description: '{{ doc("int_google_analytics__session") }}'
+    columns:
+      - name: unique_session_id
+        description: Primary key, combination of `user_pseudo_id` and `ga_session_id`.
+        tests:
+          - unique
+          - not_null
+     
