@@ -28,29 +28,27 @@ jobs:
         run: |
           echo "${{ secrets.GCP_KEYFILE_JSON }}" > keyfile.json
           export GOOGLE_APPLICATION_CREDENTIALS=keyfile.json
-          
+
       - name: Debug environment variables
         run: |
           echo "GCP_PROJECT_ID is ${{ secrets.GCP_PROJECT_ID }}"
           echo "DBT_DATASET is ${{ secrets.DBT_DATASET }}"
 
-      - name: Create dbt profiles.yml  
+      - name: Create dbt profiles.yml
         run: |
           mkdir -p /home/runner/.dbt
-          cat <<EOF > /home/runner/.dbt/profiles.yml
-      my_first_dbt_project:
-        outputs:
-          default:
-            type: bigquery
-            method: service-account
-            project: "analyticsengineer-428215"
-            dataset: "dbt_cmestre"
-            keyfile: keyfile.json
-        target: default
-      EOF
+          cat > /home/runner/.dbt/profiles.yml <<EOF
+my_first_dbt_project:
+  outputs:
+    default:
+      type: bigquery
+      method: service-account
+      project: "${{ secrets.GCP_PROJECT_ID }}"
+      dataset: "${{ secrets.DBT_DATASET }}"
+      keyfile: keyfile.json
+  target: default
+EOF
 
-
-    
       - name: Verify profiles.yml
         run: |
           echo "Listing contents of /home/runner/.dbt directory"
@@ -59,4 +57,4 @@ jobs:
           cat /home/runner/.dbt/profiles.yml
 
       - name: Run dbt models
-        run: dbt build --select state:modified+ --profiles-dir /home/runner/.dbt
+        run: dbt build --select state:modified+ --profiles-dir /home/runner/.dbt --profile my_first_dbt_project
