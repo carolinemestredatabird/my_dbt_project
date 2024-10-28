@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - 'feature/*'
-
+      
 jobs:
   dbt-run:
     runs-on: ubuntu-latest
