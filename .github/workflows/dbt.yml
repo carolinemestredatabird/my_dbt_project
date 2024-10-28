@@ -42,8 +42,8 @@ jobs:
           echo "    default:" >> /home/runner/.dbt/profiles.yml
           echo "      type: bigquery" >> /home/runner/.dbt/profiles.yml
           echo "      method: service-account" >> /home/runner/.dbt/profiles.yml
-          echo "      project: \"analyticsengineer-428215\"" >> /home/runner/.dbt/profiles.yml
-          echo "      dataset: \"dbt_cmestre\"" >> /home/runner/.dbt/profiles.yml
+          echo "      project: analyticsengineer-428215" >> /home/runner/.dbt/profiles.yml
+          echo "      dataset: dbt_cmestre" >> /home/runner/.dbt/profiles.yml
           echo "      keyfile: keyfile.json" >> /home/runner/.dbt/profiles.yml
           echo "  target: default" >> /home/runner/.dbt/profiles.yml
 
