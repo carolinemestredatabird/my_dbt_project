@@ -1,12 +1,12 @@
 name: dbt run
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
-      - 'feature/*'
+      - '**'  # Triggers on commits to any branch
+  pull_request:
+    branches:
+      - main  # Triggers when a PR targets the 'main' branch
       
 jobs:
   dbt-run:
