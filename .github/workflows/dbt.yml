@@ -22,7 +22,16 @@ jobs:
 
       - name: Install dbt
         run: |
-          pip install dbt-bigquery  # ou autre adaptateur dbt
+          pip install dbt-bigquery
 
-      - name: Build modified dbt models
+      - name: Set up Google Cloud Keyfile
+        env:
+          GCP_KEYFILE_JSON: ${{ secrets.GCP_KEYFILE_JSON }}
+        run: |
+          echo "$GCP_KEYFILE_JSON" > keyfile.json
+          export GOOGLE_APPLICATION_CREDENTIALS=keyfile.json
+
+      - name: Run dbt models
+        env:
+          DBT_PROJECT_ID: ${{ secrets.DBT_PROJECT_ID }}
         run: dbt build --select state:modified+
