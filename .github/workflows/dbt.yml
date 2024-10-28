@@ -34,7 +34,7 @@ jobs:
       - name: Create dbt profiles.yml
         run: |
           mkdir -p ~/.dbt
-          echo "my_dbt_project:" > ~/.dbt/profiles.yml
+          echo "my_first_dbt_project:" > ~/.dbt/profiles.yml
           echo "  outputs:" >> ~/.dbt/profiles.yml
           echo "    default:" >> ~/.dbt/profiles.yml
           echo "      type: bigquery" >> ~/.dbt/profiles.yml
@@ -48,4 +48,4 @@ jobs:
         env:
           DBT_PROJECT_ID: ${{ secrets.DBT_PROJECT_ID }}
           DBT_DATASET: ${{ secrets.DBT_DATASET }}
-        run: dbt build --select state:modified+
+        run: dbt build --select state:modified+ --profiles-dir ~/.dbt
