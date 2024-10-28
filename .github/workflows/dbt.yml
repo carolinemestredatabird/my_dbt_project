@@ -3,10 +3,10 @@ name: dbt run
 on:
   pull_request:
     branches:
-      - main  # Spécifiez la branche cible des PRs
+      - main
   push:
     branches:
-      - 'feature/*'  # Pour chaque commit sur les branches de développement
+      - 'feature/*'
 
 jobs:
   dbt-run:
@@ -25,24 +25,29 @@ jobs:
           pip install dbt-bigquery
 
       - name: Set up Google Cloud Keyfile
-        env:
-          GCP_KEYFILE_JSON: ${{ secrets.GCP_KEYFILE_JSON }}
         run: |
-          echo "$GCP_KEYFILE_JSON" > keyfile.json
+          echo "${{ secrets.GCP_KEYFILE_JSON }}" > keyfile.json
           export GOOGLE_APPLICATION_CREDENTIALS=keyfile.json
+
+      - name: Debug environment variables
+        run: |
+          echo "GCP_PROJECT_ID is ${{ secrets.GCP_PROJECT_ID }}"
+          echo "DBT_DATASET is ${{ secrets.DBT_DATASET }}"
 
       - name: Create dbt profiles.yml
         run: |
           mkdir -p /home/runner/.dbt
-          echo "my_first_dbt_project:" > /home/runner/.dbt/profiles.yml
-          echo "  outputs:" >> /home/runner/.dbt/profiles.yml
-          echo "    default:" >> /home/runner/.dbt/profiles.yml
-          echo "      type: bigquery" >> /home/runner/.dbt/profiles.yml
-          echo "      method: service-account" >> /home/runner/.dbt/profiles.yml
-          echo "      project: $DBT_PROJECT_ID" >> /home/runner/.dbt/profiles.yml
-          echo "      dataset: $DBT_DATASET" >> /home/runner/.dbt/profiles.yml
-          echo "      keyfile: keyfile.json" >> /home/runner/.dbt/profiles.yml
-          echo "  target: default" >> /home/runner/.dbt/profiles.yml
+          cat > /home/runner/.dbt/profiles.yml <<EOF
+my_first_dbt_project:
+  outputs:
+    default:
+      type: bigquery
+      method: service-account
+      project: "${{ secrets.GCP_PROJECT_ID }}"
+      dataset: "${{ secrets.DBT_DATASET }}"
+      keyfile: keyfile.json
+  target: default
+EOF
 
       - name: Verify profiles.yml
         run: |
@@ -52,7 +57,4 @@ jobs:
           cat /home/runner/.dbt/profiles.yml
 
       - name: Run dbt models
-        env:
-          DBT_PROJECT_ID: ${{ secrets.DBT_PROJECT_ID }}
-          DBT_DATASET: ${{ secrets.DBT_DATASET }}
-        run: dbt build --select state:modified+ --profiles-dir /home/runner/.dbt
+        run: dbt build --select state:modified+ --profiles-dir /home/runner/.dbt --profile my_first_dbt_project
