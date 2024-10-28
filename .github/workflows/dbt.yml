@@ -17,7 +17,7 @@ jobs:
           DBT_CLOUD_API_TOKEN: dbtc_7ygh81ED04dUq16i7ZDwCf3nqiI862d3fSs5QfYjF5HkvzQzbM
         run: |
           curl --request POST \
-            --url https://cloud.getdbt.com/api/v2/accounts/70403103959363/jobs/70403104216915/run/ \
+            --url https://cloud.getdbt.com/api/v2/accounts/70403103964889/jobs/70403104220839/run/ \
             --header "Authorization: Token ${DBT_CLOUD_API_TOKEN}" \
             --header 'Content-Type: application/json' \
             --data '{"cause": "Triggered via GitHub Actions"}'
