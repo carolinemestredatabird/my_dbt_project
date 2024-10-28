@@ -61,6 +61,6 @@ jobs:
 
       - name: Run dbt models
         env:
-          DBT_PROJECT_ID: ${{ secrets.DBT_PROJECT_ID }}
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           DBT_DATASET: ${{ secrets.DBT_DATASET }}
         run: dbt build --select state:modified+ --profiles-dir /home/runner/.dbt
