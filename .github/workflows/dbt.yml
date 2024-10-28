@@ -38,16 +38,17 @@ jobs:
         run: |
           mkdir -p /home/runner/.dbt
           cat <<EOF > /home/runner/.dbt/profiles.yml
-          my_first_dbt_project:
-            outputs:
-              default:
-                type: bigquery
-                method: service-account
-                project: "analyticsengineer-428215"
-                dataset: "dbt_cmestre"
-                keyfile: keyfile.json
-            target: default
-          EOF
+      my_first_dbt_project:
+        outputs:
+          default:
+            type: bigquery
+            method: service-account
+            project: "analyticsengineer-428215"
+            dataset: "dbt_cmestre"
+            keyfile: keyfile.json
+        target: default
+      EOF
+
 
     
       - name: Verify profiles.yml
