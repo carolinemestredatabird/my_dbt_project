@@ -22,7 +22,37 @@ jobs:
 
       - name: Install dbt
         run: |
-          pip install dbt-bigquery  # ou autre adaptateur dbt
+          pip install dbt-bigquery
 
-      - name: Build modified dbt models
-        run: dbt build --select state:modified+
+      - name: Set up Google Cloud Keyfile
+        env:
+          GCP_KEYFILE_JSON: ${{ secrets.GCP_KEYFILE_JSON }}
+        run: |
+          echo "$GCP_KEYFILE_JSON" > keyfile.json
+          export GOOGLE_APPLICATION_CREDENTIALS=keyfile.json
+
+      - name: Create dbt profiles.yml
+        run: |
+          mkdir -p /home/runner/.dbt
+          echo "my_first_dbt_project:" > /home/runner/.dbt/profiles.yml
+          echo "  outputs:" >> /home/runner/.dbt/profiles.yml
+          echo "    default:" >> /home/runner/.dbt/profiles.yml
+          echo "      type: bigquery" >> /home/runner/.dbt/profiles.yml
+          echo "      method: service-account" >> /home/runner/.dbt/profiles.yml
+          echo "      project: $DBT_PROJECT_ID" >> /home/runner/.dbt/profiles.yml
+          echo "      dataset: $DBT_DATASET" >> /home/runner/.dbt/profiles.yml
+          echo "      keyfile: keyfile.json" >> /home/runner/.dbt/profiles.yml
+          echo "  target: default" >> /home/runner/.dbt/profiles.yml
+
+      - name: Verify profiles.yml
+        run: |
+          echo "Listing contents of /home/runner/.dbt directory"
+          ls -la /home/runner/.dbt
+          echo "Displaying profiles.yml content"
+          cat /home/runner/.dbt/profiles.yml
+
+      - name: Run dbt models
+        env:
+          DBT_PROJECT_ID: ${{ secrets.DBT_PROJECT_ID }}
+          DBT_DATASET: ${{ secrets.DBT_DATASET }}
+        run: dbt build --select state:modified+ --profiles-dir /home/runner/.dbt
