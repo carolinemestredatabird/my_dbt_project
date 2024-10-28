@@ -37,7 +37,7 @@ jobs:
           echo "DBT_DATASET is $DBT_DATASET"
         env:
           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          DBT_DATASET: ${{ secrets.DBT_DATASET }}  
+          DBT_DATASET: ${{ secrets.DBT_DATASET }}
 
       - name: Create dbt profiles.yml  
         run: |
@@ -51,7 +51,6 @@ jobs:
           echo "      dataset: ${{ secrets.DBT_DATASET }}" >> /home/runner/.dbt/profiles.yml
           echo "      keyfile: keyfile.json" >> /home/runner/.dbt/profiles.yml
           echo "  target: default" >> /home/runner/.dbt/profiles.yml
-
 
       - name: Verify profiles.yml
         run: |
