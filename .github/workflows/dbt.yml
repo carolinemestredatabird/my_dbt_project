@@ -1,60 +1,23 @@
-name: dbt run
+name: Trigger dbt Cloud Job
 
 on:
   push:
     branches:
-      - '**'  # Triggers on commits to any branch
+      - '**'
   pull_request:
     branches:
-      - main  # Triggers when a PR targets the 'main' branch
-      
+      - main
+
 jobs:
-  dbt-run:
+  trigger-dbt-cloud:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-
-      - name: Install dbt
+      - name: Trigger dbt Cloud Job
+        env:
+          DBT_CLOUD_API_TOKEN: ${{ secrets.DBT_CLOUD_API_TOKEN }}
         run: |
-          pip install dbt-bigquery
-
-      - name: Set up Google Cloud Keyfile
-        run: |
-          echo "${{ secrets.GCP_KEYFILE_JSON }}" > keyfile.json
-          export GOOGLE_APPLICATION_CREDENTIALS=keyfile.json
-
-      - name: Debug environment variables
-        run: |
-          echo "GCP_PROJECT_ID is ${{ secrets.GCP_PROJECT_ID }}"
-          echo "DBT_DATASET is ${{ secrets.DBT_DATASET }}"
-
-      - name: Create dbt profiles.yml
-        run: |
-          mkdir -p /home/runner/.dbt
-          cat > /home/runner/.dbt/profiles.yml <<EOF
-my_first_dbt_project:
-  outputs:
-    default:
-      type: bigquery
-      method: service-account
-      project: "${{ secrets.GCP_PROJECT_ID }}"
-      dataset: "${{ secrets.DBT_DATASET }}"
-      keyfile: keyfile.json
-  target: default
-EOF
-
-      - name: Verify profiles.yml
-        run: |
-          echo "Listing contents of /home/runner/.dbt directory"
-          ls -la /home/runner/.dbt
-          echo "Displaying profiles.yml content"
-          cat /home/runner/.dbt/profiles.yml
-
-      - name: Run dbt models
-        run: dbt build --select state:modified+ --profiles-dir /home/runner/.dbt --profile my_first_dbt_project
+          curl --request POST \
+            --url https://cloud.getdbt.com/api/v2/accounts/70403103959363/jobs/70403104216915/run/ \
+            --header "Authorization: Token ${DBT_CLOUD_API_TOKEN}" \
+            --header 'Content-Type: application/json' \
+            --data '{"cause": "Triggered via GitHub Actions"}'
