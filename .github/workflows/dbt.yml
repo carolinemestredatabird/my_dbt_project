@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Trigger dbt Cloud Job
         env:
-          DBT_CLOUD_API_TOKEN: dbtc_7ygh81ED04dUq16i7ZDwCf3nqiI862d3fSs5QfYjF5HkvzQzbM
+          DBT_CLOUD_API_TOKEN: "dbtc_iY-qXSg6iLfOonRDrlHq_TLphAytIOq--7ZjASHWfBFC7cTASw"
         run: |
           curl --request POST \
             --url https://cloud.getdbt.com/api/v2/accounts/70403103964889/jobs/70403104220839/run/ \
