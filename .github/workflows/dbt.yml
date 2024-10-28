@@ -33,23 +33,23 @@ jobs:
 
       - name: Create dbt profiles.yml
         run: |
-          mkdir -p ~/.dbt
-          echo "my_first_dbt_project:" > ~/.dbt/profiles.yml
-          echo "  outputs:" >> ~/.dbt/profiles.yml
-          echo "    default:" >> ~/.dbt/profiles.yml
-          echo "      type: bigquery" >> ~/.dbt/profiles.yml
-          echo "      method: service-account" >> ~/.dbt/profiles.yml
-          echo "      project: $DBT_PROJECT_ID" >> ~/.dbt/profiles.yml
-          echo "      dataset: $DBT_DATASET" >> ~/.dbt/profiles.yml
-          echo "      keyfile: keyfile.json" >> ~/.dbt/profiles.yml
-          echo "  target: default" >> ~/.dbt/profiles.yml
-          
+          mkdir -p /home/runner/.dbt
+          echo "my_first_dbt_project:" > /home/runner/.dbt/profiles.yml
+          echo "  outputs:" >> /home/runner/.dbt/profiles.yml
+          echo "    default:" >> /home/runner/.dbt/profiles.yml
+          echo "      type: bigquery" >> /home/runner/.dbt/profiles.yml
+          echo "      method: service-account" >> /home/runner/.dbt/profiles.yml
+          echo "      project: $DBT_PROJECT_ID" >> /home/runner/.dbt/profiles.yml
+          echo "      dataset: $DBT_DATASET" >> /home/runner/.dbt/profiles.yml
+          echo "      keyfile: keyfile.json" >> /home/runner/.dbt/profiles.yml
+          echo "  target: default" >> /home/runner/.dbt/profiles.yml
+
       - name: Verify profiles.yml
         run: |
-          echo "Listing contents of ~/.dbt directory"
-          ls -la ~/.dbt
+          echo "Listing contents of /home/runner/.dbt directory"
+          ls -la /home/runner/.dbt
           echo "Displaying profiles.yml content"
-          cat ~/.dbt/profiles.yml
+          cat /home/runner/.dbt/profiles.yml
 
       - name: Run dbt models
         env:
