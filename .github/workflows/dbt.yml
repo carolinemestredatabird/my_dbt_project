@@ -31,7 +31,21 @@ jobs:
           echo "$GCP_KEYFILE_JSON" > keyfile.json
           export GOOGLE_APPLICATION_CREDENTIALS=keyfile.json
 
+      - name: Create dbt profiles.yml
+        run: |
+          mkdir -p ~/.dbt
+          echo "my_dbt_project:" > ~/.dbt/profiles.yml
+          echo "  outputs:" >> ~/.dbt/profiles.yml
+          echo "    default:" >> ~/.dbt/profiles.yml
+          echo "      type: bigquery" >> ~/.dbt/profiles.yml
+          echo "      method: service-account" >> ~/.dbt/profiles.yml
+          echo "      project: $DBT_PROJECT_ID" >> ~/.dbt/profiles.yml
+          echo "      dataset: $DBT_DATASET" >> ~/.dbt/profiles.yml
+          echo "      keyfile: keyfile.json" >> ~/.dbt/profiles.yml
+          echo "  target: default" >> ~/.dbt/profiles.yml
+
       - name: Run dbt models
         env:
           DBT_PROJECT_ID: ${{ secrets.DBT_PROJECT_ID }}
+          DBT_DATASET: ${{ secrets.DBT_DATASET }}
         run: dbt build --select state:modified+
