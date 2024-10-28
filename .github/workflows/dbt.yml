@@ -31,7 +31,7 @@ jobs:
           echo "$GCP_KEYFILE_JSON" > keyfile.json
           export GOOGLE_APPLICATION_CREDENTIALS=keyfile.json
 
-      - name: Create dbt profiles.yml
+      - name: Create dbt profiles.yml  
         run: |
           mkdir -p /home/runner/.dbt
           echo "my_first_dbt_project:" > /home/runner/.dbt/profiles.yml
