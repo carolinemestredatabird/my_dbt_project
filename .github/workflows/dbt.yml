@@ -30,6 +30,14 @@ jobs:
         run: |
           echo "$GCP_KEYFILE_JSON" > keyfile.json
           export GOOGLE_APPLICATION_CREDENTIALS=keyfile.json
+          
+      - name: Debug environment variables
+        run: |
+          echo "DBT_PROJECT_ID is $DBT_PROJECT_ID"
+          echo "DBT_DATASET is $DBT_DATASET"
+        env:
+          DBT_PROJECT_ID: ${{ secrets.DBT_PROJECT_ID }}
+          DBT_DATASET: ${{ secrets.DBT_DATASET }}
 
       - name: Create dbt profiles.yml  
         run: |
