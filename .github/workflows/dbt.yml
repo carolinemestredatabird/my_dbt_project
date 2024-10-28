@@ -37,15 +37,17 @@ jobs:
       - name: Create dbt profiles.yml  
         run: |
           mkdir -p /home/runner/.dbt
-          echo "my_first_dbt_project:" > /home/runner/.dbt/profiles.yml
-          echo "  outputs:" >> /home/runner/.dbt/profiles.yml
-          echo "    default:" >> /home/runner/.dbt/profiles.yml
-          echo "      type: bigquery" >> /home/runner/.dbt/profiles.yml
-          echo "      method: service-account" >> /home/runner/.dbt/profiles.yml
-          echo "      project: analyticsengineer-428215" >> /home/runner/.dbt/profiles.yml
-          echo "      dataset: dbt_cmestre" >> /home/runner/.dbt/profiles.yml
-          echo "      keyfile: keyfile.json" >> /home/runner/.dbt/profiles.yml
-          echo "  target: default" >> /home/runner/.dbt/profiles.yml
+          cat <<EOF > /home/runner/.dbt/profiles.yml
+          my_first_dbt_project:
+            outputs:
+              default:
+                type: bigquery
+                method: service-account
+                project: "analyticsengineer-428215"
+                dataset: "dbt_cmestre"
+                keyfile: keyfile.json
+            target: default
+          EOF
 
     
       - name: Verify profiles.yml
