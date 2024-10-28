@@ -3,10 +3,10 @@ name: dbt run
 on:
   pull_request:
     branches:
-      - main  # Spécifiez la branche cible des PRs
+      - main
   push:
     branches:
-      - 'feature/*'  # Pour chaque commit sur les branches de développement
+      - 'feature/*'
 
 jobs:
   dbt-run:
@@ -33,10 +33,10 @@ jobs:
           
       - name: Debug environment variables
         run: |
-          echo "DBT_PROJECT_ID is $GCP_PROJECT_ID"
+          echo "GCP_PROJECT_ID is $GCP_PROJECT_ID"
           echo "DBT_DATASET is $DBT_DATASET"
         env:
-          DBT_PROJECT_ID: ${{ secrets.DBT_PROJECT_ID }}
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           DBT_DATASET: ${{ secrets.DBT_DATASET }}
 
       - name: Create dbt profiles.yml  
