@@ -3,7 +3,7 @@ WITH monthly_users_recap AS (
 
 SELECT DATE_TRUNC(order_date,month) AS order_month,
 COUNT(DISTINCT user_name) AS total_monthly_users
-FROM {{ source('sales_database', 'order')}}
+FROM {{ ref('stg_sales_database__order')}}
 GROUP BY 1
 ORDER BY total_monthly_users DESC
 
