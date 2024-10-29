@@ -12,7 +12,7 @@ from {{ ref('int_sales_database__order_item') }}
 group by order_id,
     user_id,
     order_status,
-    order_created_at
+    order_created_at,
     order_approved_at
 
 ), feedback_grouped_by_order as (
