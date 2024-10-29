@@ -1,23 +1,21 @@
-name: Trigger dbt Cloud Job
 
-on:
-  push:
-    branches:
-      - '**'
-  pull_request:
-    branches:
-      - main
+name: Install DBT with Nix
+
+on: [push, pull_request]
 
 jobs:
-  trigger-dbt-cloud:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger dbt Cloud Job
-        env:
-          DBT_CLOUD_API_TOKEN: "dbtc_iY-qXSg6iLfOonRDrlHq_TLphAytIOq--7ZjASHWfBFC7cTASw"
-        run: |
-          curl --request POST \
-            --url https://cloud.getdbt.com/api/v2/accounts/70403103964889/jobs/70403104220839/run/ \
-            --header "Authorization: Token ${DBT_CLOUD_API_TOKEN}" \
-            --header 'Content-Type: application/json' \
-            --data '{"cause": "Triggered via GitHub Actions"}'
+install-dbt:
+runs-on: ubuntu-latest
+
+steps:
+- name: Checkout repository
+uses: actions/checkout@v4
+
+- name: Install DBT using Nix
+uses: CedricLeong/install-dbt-action-nix@v1
+
+- name: Verify DBT installation
+run: dbt --version
+
+- name: Run DBT command
+run: dbt run
